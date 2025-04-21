@@ -62,3 +62,11 @@ axes[2].set_ylabel('Frequency')
 plt.tight_layout()
 plt.savefig("distributions.png")
 plt.show()
+
+# Correlation Matrix: Views, Likes, Comments
+correlation_matrix = trending_videos[['view_count', 'like_count', 'comment_count']].corr()
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5, linecolor='black')
+plt.title('Correlation Matrix of Engagement Metrics')
+plt.show()
