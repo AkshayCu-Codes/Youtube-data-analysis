@@ -19,6 +19,15 @@ trending_videos['description'].fillna('No description', inplace=True)
 trending_videos['published_at'] = pd.to_datetime(trending_videos['published_at'])
 
 # Convert tags from string representation of list to actual list
-trending_videos['tags'] = trending_videos['tags'].apply(lambda x: eval(x) if isinstance(x, str) else x)
+trending_videos['tags'] = trending_videos['tags'].apply(lambda x: eval(x) if isinstance(x, str) else x) 
 
 print("Missing descriptions filled, published_at converted to datetime, and tags parsed to lists.")
+
+# Descriptive statistics for key engagement metrics
+descriptive_stats = trending_videos[['view_count', 'like_count', 'dislike_count', 'comment_count']].describe()
+
+print("Descriptive statistics for engagement metrics:")
+print(descriptive_stats)
+
+descriptive_stats.to_csv('descriptive_stats.csv')
+print("Descriptive statistics saved to descriptive_stats.csv")
