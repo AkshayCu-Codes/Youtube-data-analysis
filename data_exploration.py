@@ -11,3 +11,14 @@ data_types = trending_videos.dtypes
 
 print("Missing Values:\n", missing_values)
 print("\nData Types:\n", data_types)
+
+# Fill missing descriptions with "No description"
+trending_videos['description'].fillna('No description', inplace=True)
+
+# Convert `published_at` to datetime
+trending_videos['published_at'] = pd.to_datetime(trending_videos['published_at'])
+
+# Convert tags from string representation of list to actual list
+trending_videos['tags'] = trending_videos['tags'].apply(lambda x: eval(x) if isinstance(x, str) else x)
+
+print("Missing descriptions filled, published_at converted to datetime, and tags parsed to lists.")
