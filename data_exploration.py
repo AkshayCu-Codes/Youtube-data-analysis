@@ -70,3 +70,10 @@ plt.figure(figsize=(8, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5, linecolor='black')
 plt.title('Correlation Matrix of Engagement Metrics')
 plt.show()
+
+# Boxplot of view count to identify outliers
+plt.figure(figsize=(10, 6))
+sns.boxplot(x=trending_videos['view_count'], color='purple')
+plt.title('Boxplot of View Counts')
+plt.xlabel('View Count')
+plt.show()
