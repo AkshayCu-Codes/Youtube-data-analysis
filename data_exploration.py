@@ -77,3 +77,47 @@ sns.boxplot(x=trending_videos['view_count'], color='purple')
 plt.title('Boxplot of View Counts')
 plt.xlabel('View Count')
 plt.show()
+
+# Bar chart: Number of Trending Videos by Category
+plt.figure(figsize=(12, 8))
+sns.countplot(
+    y=trending_videos['category_name'],
+    order=trending_videos['category_name'].value_counts().index,
+    palette='viridis'
+)
+plt.title('Number of Trending Videos by Category')
+plt.xlabel('Number of Videos')
+plt.ylabel('Category')
+plt.tight_layout()
+plt.savefig("category_distribution.png")
+plt.show()
+
+# Average engagement metrics by category
+category_engagement = trending_videos.groupby('category_name')[['view_count', 'like_count', 'comment_count']]\
+                                     .mean().sort_values(by='view_count', ascending=False)
+
+# Create a 3-panel plot for view, like, and comment count
+fig, axes = plt.subplots(1, 3, figsize=(18, 10))
+
+# Average View Count
+sns.barplot(y=category_engagement.index, x=category_engagement['view_count'], ax=axes[0], palette='viridis')
+axes[0].set_title('Average View Count by Category')
+axes[0].set_xlabel('Average View Count')
+axes[0].set_ylabel('Category')
+
+# Average Like Count
+sns.barplot(y=category_engagement.index, x=category_engagement['like_count'], ax=axes[1], palette='viridis')
+axes[1].set_title('Average Like Count by Category')
+axes[1].set_xlabel('Average Like Count')
+axes[1].set_ylabel('')
+
+# Average Comment Count
+sns.barplot(y=category_engagement.index, x=category_engagement['comment_count'], ax=axes[2], palette='viridis')
+axes[2].set_title('Average Comment Count by Category')
+axes[2].set_xlabel('Average Comment Count')
+axes[2].set_ylabel('')
+
+plt.tight_layout()
+plt.savefig("average_engagement_by_category.png")
+plt.show()
+
