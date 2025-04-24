@@ -1,25 +1,36 @@
 import pandas as pd
 from googleapiclient.discovery import build
 
-# replace with your own API key
+# Replace with your actual API key
 API_KEY = 'AIzaSyAwhwXmN6Uc5kS98o2xyWAUOTh1BbhUcjM'
 
-def get_trending_videos(api_key, max_results=200):
-    # build the youtube service
+# Fetch mapping from category ID to category name
+def get_category_mapping(api_key):
     youtube = build('youtube', 'v3', developerKey=api_key)
+    request = youtube.videoCategories().list(
+        part='snippet',
+        regionCode='US'
+    )
+    response = request.execute()
+    category_mapping = {}
+    for item in response['items']:
+        category_id = int(item['id'])
+        category_name = item['snippet']['title']
+        category_mapping[category_id] = category_name
+    return category_mapping
 
-    # initialize the list to hold video details
+# Get trending videos with category names
+def get_trending_videos(api_key, category_mapping, max_results=200):
+    youtube = build('youtube', 'v3', developerKey=api_key)
     videos = []
 
-    # fetch the most popular videos
     request = youtube.videos().list(
         part='snippet,contentDetails,statistics',
         chart='mostPopular',
-        regionCode='US',  
+        regionCode='US',
         maxResults=50
     )
 
-    # paginate through the results if max_results > 50
     while request and len(videos) < max_results:
         response = request.execute()
         for item in response['items']:
@@ -31,6 +42,7 @@ def get_trending_videos(api_key, max_results=200):
                 'channel_id': item['snippet']['channelId'],
                 'channel_title': item['snippet']['channelTitle'],
                 'category_id': item['snippet']['categoryId'],
+                'category_name': category_mapping.get(int(item['snippet']['categoryId']), 'Unknown'),
                 'tags': item['snippet'].get('tags', []),
                 'duration': item['contentDetails']['duration'],
                 'definition': item['contentDetails']['definition'],
@@ -43,17 +55,19 @@ def get_trending_videos(api_key, max_results=200):
             }
             videos.append(video_details)
 
-        # get the next page token
         request = youtube.videos().list_next(request, response)
 
     return videos[:max_results]
 
+# Save to CSV
 def save_to_csv(data, filename):
     df = pd.DataFrame(data)
     df.to_csv(filename, index=False)
 
+# Main function
 def main():
-    trending_videos = get_trending_videos(API_KEY)
+    category_mapping = get_category_mapping(API_KEY)
+    trending_videos = get_trending_videos(API_KEY, category_mapping)
     filename = 'trending_videos.csv'
     save_to_csv(trending_videos, filename)
     print(f'Trending videos saved to {filename}')
