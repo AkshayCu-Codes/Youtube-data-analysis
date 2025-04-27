@@ -80,7 +80,7 @@ def main():
     # DE: Germany
     
     trending_videos = get_trending_videos(API_KEY, category_mapping, countries)
-    filename = 'trending_videos_by_country.csv'
+    filename = 'trending_videos.csv'
     save_to_csv(trending_videos, filename)
     print(f'Trending videos saved to {filename}')
 
