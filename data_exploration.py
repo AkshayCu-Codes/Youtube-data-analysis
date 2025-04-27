@@ -1,3 +1,4 @@
+# data_exploration.py
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -29,22 +30,18 @@ def plot_distributions(df):
     axes[1].set_title('Like Count Distribution')
     axes[2].set_title('Comment Count Distribution')
     plt.tight_layout()
-    plt.savefig("distributions.png")
-    plt.show()
 
 def plot_correlation_matrix(df):
     correlation_matrix = df[['view_count', 'like_count', 'comment_count']].corr()
     plt.figure(figsize=(8, 6))
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5, linecolor='black')
     plt.title('Correlation Matrix of Engagement Metrics')
-    plt.show()
 
 def plot_boxplot_views(df):
     plt.figure(figsize=(10, 6))
     sns.boxplot(x=df['view_count'], color='purple')
     plt.title('Boxplot of View Counts')
     plt.xlabel('View Count')
-    plt.show()
 
 def plot_category_distribution(df):
     plt.figure(figsize=(12, 8))
@@ -57,12 +54,9 @@ def plot_category_distribution(df):
     plt.xlabel('Number of Videos')
     plt.ylabel('Category')
     plt.tight_layout()
-    plt.savefig("category_distribution.png")
-    plt.show()
 
 def plot_engagement_by_category(df):
-    category_engagement = df.groupby('category_name')[['view_count', 'like_count', 'comment_count']]\
-                            .mean().sort_values(by='view_count', ascending=False)
+    category_engagement = df.groupby('category_name')[['view_count', 'like_count', 'comment_count']].mean().sort_values(by='view_count', ascending=False)
     fig, axes = plt.subplots(1, 3, figsize=(18, 10))
     sns.barplot(y=category_engagement.index, x=category_engagement['view_count'], ax=axes[0], palette='viridis')
     sns.barplot(y=category_engagement.index, x=category_engagement['like_count'], ax=axes[1], palette='viridis')
@@ -71,10 +65,7 @@ def plot_engagement_by_category(df):
     axes[0].set_title('Average View Count by Category')
     axes[1].set_title('Average Like Count by Category')
     axes[2].set_title('Average Comment Count by Category')
-
     plt.tight_layout()
-    plt.savefig("average_engagement_by_category.png")
-    plt.show()
 
 def analyze_duration(df):
     df['duration_seconds'] = df['duration'].apply(lambda x: isodate.parse_duration(x).total_seconds())
@@ -86,7 +77,6 @@ def analyze_duration(df):
     plt.title('Video Length vs View Count')
     plt.xlabel('Video Length (seconds)')
     plt.ylabel('View Count')
-    plt.show()
 
     length_engagement = df.groupby('duration_range')[['view_count', 'like_count', 'comment_count']].mean()
     fig, axes = plt.subplots(1, 3, figsize=(18, 8))
@@ -100,7 +90,6 @@ def analyze_duration(df):
     axes[2].set_title('Average Comment Count by Duration Range')
 
     plt.tight_layout()
-    plt.show()
 
 def analyze_tags(df):
     df['tag_count'] = df['tags'].apply(len)
@@ -110,7 +99,6 @@ def analyze_tags(df):
     plt.title('Number of Tags vs View Count')
     plt.xlabel('Number of Tags')
     plt.ylabel('View Count')
-    plt.show()
 
 def analyze_publish_hour(df):
     df['publish_hour'] = df['published_at'].dt.hour
@@ -120,34 +108,9 @@ def analyze_publish_hour(df):
     plt.title('Distribution of Videos by Publish Hour')
     plt.xlabel('Publish Hour')
     plt.ylabel('Number of Videos')
-    plt.show()
 
     plt.figure(figsize=(10, 6))
     sns.scatterplot(x='publish_hour', y='view_count', data=df, alpha=0.6, color='teal')
     plt.title('Publish Hour vs View Count')
     plt.xlabel('Publish Hour')
     plt.ylabel('View Count')
-    plt.show()
-
-def main():
-    filepath = 'trending_videos.csv'
-    df = load_data(filepath)
-    
-    check_missing_and_dtypes(df)
-    
-    df = preprocess_data(df)
-    
-    df[['view_count', 'like_count', 'dislike_count', 'comment_count']].describe().to_csv('descriptive_stats.csv')
-    
-    plot_distributions(df)
-    plot_correlation_matrix(df)
-    plot_boxplot_views(df)
-    plot_category_distribution(df)
-    plot_engagement_by_category(df)
-    analyze_duration(df)
-    analyze_tags(df)
-    analyze_publish_hour(df)
-
-if __name__ == "__main__":
-    main()
-    
