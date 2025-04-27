@@ -19,45 +19,47 @@ def get_category_mapping(api_key):
         category_mapping[category_id] = category_name
     return category_mapping
 
-# Get trending videos with category names
-def get_trending_videos(api_key, category_mapping, max_results=200):
+# Get trending videos with category names for multiple countries
+def get_trending_videos(api_key, category_mapping, countries, max_results=200):
     youtube = build('youtube', 'v3', developerKey=api_key)
-    videos = []
+    all_videos = []
 
-    request = youtube.videos().list(
-        part='snippet,contentDetails,statistics',
-        chart='mostPopular',
-        regionCode='US',
-        maxResults=50
-    )
+    for country in countries:
+        request = youtube.videos().list(
+            part='snippet,contentDetails,statistics',
+            chart='mostPopular',
+            regionCode=country,
+            maxResults=50
+        )
 
-    while request and len(videos) < max_results:
-        response = request.execute()
-        for item in response['items']:
-            video_details = {
-                'video_id': item['id'],
-                'title': item['snippet']['title'],
-                'description': item['snippet']['description'],
-                'published_at': item['snippet']['publishedAt'],
-                'channel_id': item['snippet']['channelId'],
-                'channel_title': item['snippet']['channelTitle'],
-                'category_id': item['snippet']['categoryId'],
-                'category_name': category_mapping.get(int(item['snippet']['categoryId']), 'Unknown'),
-                'tags': item['snippet'].get('tags', []),
-                'duration': item['contentDetails']['duration'],
-                'definition': item['contentDetails']['definition'],
-                'caption': item['contentDetails'].get('caption', 'false'),
-                'view_count': item['statistics'].get('viewCount', 0),
-                'like_count': item['statistics'].get('likeCount', 0),
-                'dislike_count': item['statistics'].get('dislikeCount', 0),
-                'favorite_count': item['statistics'].get('favoriteCount', 0),
-                'comment_count': item['statistics'].get('commentCount', 0)
-            }
-            videos.append(video_details)
+        while request and len(all_videos) < max_results:
+            response = request.execute()
+            for item in response['items']:
+                video_details = {
+                    'video_id': item['id'],
+                    'title': item['snippet']['title'],
+                    'description': item['snippet']['description'],
+                    'published_at': item['snippet']['publishedAt'],
+                    'channel_id': item['snippet']['channelId'],
+                    'channel_title': item['snippet']['channelTitle'],
+                    'category_id': item['snippet']['categoryId'],
+                    'category_name': category_mapping.get(int(item['snippet']['categoryId']), 'Unknown'),
+                    'tags': item['snippet'].get('tags', []),
+                    'duration': item['contentDetails']['duration'],
+                    'definition': item['contentDetails']['definition'],
+                    'caption': item['contentDetails'].get('caption', 'false'),
+                    'view_count': item['statistics'].get('viewCount', 0),
+                    'like_count': item['statistics'].get('likeCount', 0),
+                    'dislike_count': item['statistics'].get('dislikeCount', 0),
+                    'favorite_count': item['statistics'].get('favoriteCount', 0),
+                    'comment_count': item['statistics'].get('commentCount', 0),
+                    'country': country  # Adding the country information
+                }
+                all_videos.append(video_details)
 
-        request = youtube.videos().list_next(request, response)
+            request = youtube.videos().list_next(request, response)
 
-    return videos[:max_results]
+    return all_videos[:max_results]
 
 # Save to CSV
 def save_to_csv(data, filename):
@@ -67,8 +69,18 @@ def save_to_csv(data, filename):
 # Main function
 def main():
     category_mapping = get_category_mapping(API_KEY)
-    trending_videos = get_trending_videos(API_KEY, category_mapping)
-    filename = 'trending_videos.csv'
+    
+    # List of countries (you can add more country codes)
+    countries = ['US', 'IN', 'GB', 'CA', 'DE']
+    
+    # US: United States
+    # IN: India
+    # GB: United Kingdom
+    # CA: Canada
+    # DE: Germany
+    
+    trending_videos = get_trending_videos(API_KEY, category_mapping, countries)
+    filename = 'trending_videos_by_country.csv'
     save_to_csv(trending_videos, filename)
     print(f'Trending videos saved to {filename}')
 
