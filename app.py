@@ -26,22 +26,16 @@ def main():
     st.set_page_config(page_title="YouTube Trending Analysis", page_icon="📈", layout="wide")
     st.title("📈 YouTube Trending Video Analysis")
 
-    # Sidebar setup
+    # Sidebar with Tabs
     with st.sidebar:
         st.header("Navigation")
-        selected_tab = st.radio("Go to", [
+        selected_tab = st.selectbox("Select a section", [
             "🏠 Home",
             "🔍 Fetch and Analysis",
             "📊 Visuals",
             "ℹ️ About"
         ])
         st.markdown("---")
-        api_key = st.text_input("YouTube API Key", type="password")
-        countries = st.multiselect(
-            "Select countries",
-            options=['US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU'],
-            default=['US']
-        )
 
     if selected_tab == "🏠 Home":
         st.subheader("Welcome to YouTube Trending Video Analysis App!")
@@ -53,12 +47,20 @@ def main():
             - Analyze best time to upload videos!
             
             ---
-            👉 Use the **Sidebar** to Fetch and Visualize the data.
+            👉 Switch tabs from the sidebar to Fetch and Explore data.
         """)
 
     elif selected_tab == "🔍 Fetch and Analysis":
         st.subheader("Fetch and Preprocess Trending Videos")
-        if st.button("Fetch and Analyze"):
+
+        api_key = st.text_input("🔑 Enter YouTube API Key", type="password")
+        countries = st.multiselect(
+            "🌎 Select countries",
+            options=['US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU'],
+            default=[]
+        )
+
+        if st.button("🚀 Fetch and Analyze"):
             if not api_key:
                 st.error("❗ Please enter your API Key.")
             elif not countries:
@@ -76,44 +78,57 @@ def main():
 
     elif selected_tab == "📊 Visuals":
         st.subheader("📊 Data Visualizations")
-        try:
-            df = prepare_data('trending_videos.csv')
 
-            with st.expander("View, Like, Comment Distribution", expanded=False):
-                plot_distributions(df)
-                st.pyplot()
+        api_key = st.text_input("🔑 Enter YouTube API Key", type="password", key="visuals_api_key")
+        countries = st.multiselect(
+            "🌎 Select countries",
+            options=['US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU'],
+            default=[],
+            key="visuals_countries"
+        )
 
-            with st.expander("Correlation Matrix of Engagement Metrics", expanded=False):
-                plot_correlation_matrix(df)
-                st.pyplot()
+        if st.button("📥 Load Visuals"):
+            if not countries:
+                st.error("❗ Please select at least one country.")
+            else:
+                try:
+                    df = prepare_data('trending_videos.csv')
 
-            with st.expander("Boxplot of View Counts", expanded=False):
-                plot_boxplot_views(df)
-                st.pyplot()
+                    with st.expander("📈 View, Like, Comment Distribution", expanded=False):
+                        plot_distributions(df)
+                        st.pyplot()
 
-            with st.expander("Distribution of Trending Videos by Category", expanded=False):
-                plot_category_distribution(df)
-                st.pyplot()
+                    with st.expander("📈 Correlation Matrix of Engagement Metrics", expanded=False):
+                        plot_correlation_matrix(df)
+                        st.pyplot()
 
-            with st.expander("Average Engagement Metrics by Category", expanded=False):
-                plot_engagement_by_category(df)
-                st.pyplot()
+                    with st.expander("📈 Boxplot of View Counts", expanded=False):
+                        plot_boxplot_views(df)
+                        st.pyplot()
 
-            with st.expander("Duration vs View Count", expanded=False):
-                analyze_duration(df)
-                st.pyplot()
+                    with st.expander("📈 Distribution of Trending Videos by Category", expanded=False):
+                        plot_category_distribution(df)
+                        st.pyplot()
 
-            with st.expander("Tags vs View Count", expanded=False):
-                analyze_tags(df)
-                st.pyplot()
+                    with st.expander("📈 Average Engagement Metrics by Category", expanded=False):
+                        plot_engagement_by_category(df)
+                        st.pyplot()
 
-            with st.expander("Publish Hour vs View Count", expanded=False):
-                analyze_publish_hour(df)
-                st.pyplot()
+                    with st.expander("📈 Duration vs View Count", expanded=False):
+                        analyze_duration(df)
+                        st.pyplot()
 
-        except Exception as e:
-            st.error(f"⚠️ Error loading data: {e}")
-            st.info("Please fetch and preprocess data first from the 'Fetch and Analysis' tab.")
+                    with st.expander("📈 Tags vs View Count", expanded=False):
+                        analyze_tags(df)
+                        st.pyplot()
+
+                    with st.expander("📈 Publish Hour vs View Count", expanded=False):
+                        analyze_publish_hour(df)
+                        st.pyplot()
+
+                except Exception as e:
+                    st.error(f"⚠️ Error loading data: {e}")
+                    st.info("Please fetch and preprocess data first from the 'Fetch and Analysis' tab.")
 
     elif selected_tab == "ℹ️ About":
         st.subheader("About This App")
