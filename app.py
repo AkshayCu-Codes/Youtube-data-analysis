@@ -8,7 +8,6 @@ from data_exploration import load_data, check_missing_and_dtypes, preprocess_dat
                                plot_engagement_by_category, analyze_duration, \
                                analyze_tags, analyze_publish_hour
 
-# Cache API fetching
 @st.cache_data
 def fetch_data(api_key, countries):
     category_mapping = get_category_mapping(api_key)
@@ -16,7 +15,6 @@ def fetch_data(api_key, countries):
     save_to_csv(trending_videos, 'trending_videos.csv')
     return 'trending_videos.csv'
 
-# Cache loading and preprocessing
 @st.cache_data
 def prepare_data(csv_file):
     df = load_data(csv_file)
@@ -28,32 +26,39 @@ def main():
     st.set_page_config(page_title="YouTube Trending Analysis", page_icon="📈", layout="wide")
     st.title("📈 YouTube Trending Video Analysis")
 
+    # Sidebar setup
     with st.sidebar:
-        st.header("Configuration")
-        api_key = st.text_input("Enter your YouTube API Key", type="password")
+        st.header("Navigation")
+        selected_tab = st.radio("Go to", [
+            "🏠 Home",
+            "🔍 Fetch and Analysis",
+            "📊 Visuals",
+            "ℹ️ About"
+        ])
+        st.markdown("---")
+        api_key = st.text_input("YouTube API Key", type="password")
         countries = st.multiselect(
-            "Select countries to fetch trending videos",
+            "Select countries",
             options=['US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU'],
             default=['US']
         )
-        section = st.radio("Go to Section:", [
-            "Home", "Fetch and Analyze", "Data Visualizations"
-        ])
 
-    if section == "Home":
-        st.subheader("Welcome to the YouTube Trending Video Analysis App!")
+    if selected_tab == "🏠 Home":
+        st.subheader("Welcome to YouTube Trending Video Analysis App!")
         st.write("""
-            📹 This app lets you:
-            - Fetch trending videos from YouTube API
-            - Preprocess and explore the data
-            - Visualize important metrics and trends
+            🔥 **Features**:
+            - Fetch trending videos from YouTube
+            - Preprocess and explore the dataset
+            - Visualize important trends like views, likes, categories
+            - Analyze best time to upload videos!
+            
             ---
-            Go to the **Sidebar** to fetch and analyze trending videos!
+            👉 Use the **Sidebar** to Fetch and Visualize the data.
         """)
 
-    elif section == "Fetch and Analyze":
-        st.subheader("Fetch Trending Videos")
-        if st.button("Fetch and Analyze Data"):
+    elif selected_tab == "🔍 Fetch and Analysis":
+        st.subheader("Fetch and Preprocess Trending Videos")
+        if st.button("Fetch and Analyze"):
             if not api_key:
                 st.error("❗ Please enter your API Key.")
             elif not countries:
@@ -61,54 +66,67 @@ def main():
             else:
                 with st.spinner("Fetching trending videos..."):
                     csv_file = fetch_data(api_key, countries)
-                st.success("✅ Data fetched and saved!")
+                st.success("✅ Trending videos fetched and saved!")
 
                 with st.spinner("Loading and preprocessing data..."):
                     df = prepare_data(csv_file)
                 st.success("✅ Data loaded and preprocessed!")
 
-                st.write(df.head())
+                st.dataframe(df.head())
 
-    elif section == "Data Visualizations":
+    elif selected_tab == "📊 Visuals":
         st.subheader("📊 Data Visualizations")
         try:
             df = prepare_data('trending_videos.csv')
 
-            with st.expander("View, Like, Comment Distribution"):
+            with st.expander("View, Like, Comment Distribution", expanded=False):
                 plot_distributions(df)
                 st.pyplot()
 
-            with st.expander("Correlation Matrix of Engagement Metrics"):
+            with st.expander("Correlation Matrix of Engagement Metrics", expanded=False):
                 plot_correlation_matrix(df)
                 st.pyplot()
 
-            with st.expander("Boxplot of View Counts"):
+            with st.expander("Boxplot of View Counts", expanded=False):
                 plot_boxplot_views(df)
                 st.pyplot()
 
-            with st.expander("Distribution of Trending Videos by Category"):
+            with st.expander("Distribution of Trending Videos by Category", expanded=False):
                 plot_category_distribution(df)
                 st.pyplot()
 
-            with st.expander("Average Engagement Metrics by Category"):
+            with st.expander("Average Engagement Metrics by Category", expanded=False):
                 plot_engagement_by_category(df)
                 st.pyplot()
 
-            with st.expander("Duration vs View Count"):
+            with st.expander("Duration vs View Count", expanded=False):
                 analyze_duration(df)
                 st.pyplot()
 
-            with st.expander("Tags vs View Count"):
+            with st.expander("Tags vs View Count", expanded=False):
                 analyze_tags(df)
                 st.pyplot()
 
-            with st.expander("Publish Hour vs View Count"):
+            with st.expander("Publish Hour vs View Count", expanded=False):
                 analyze_publish_hour(df)
                 st.pyplot()
 
         except Exception as e:
             st.error(f"⚠️ Error loading data: {e}")
-            st.info("Please fetch and preprocess data first from the 'Fetch and Analyze' section.")
+            st.info("Please fetch and preprocess data first from the 'Fetch and Analysis' tab.")
+
+    elif selected_tab == "ℹ️ About":
+        st.subheader("About This App")
+        st.write("""
+            - **Developer**: Akshay CU 🚀
+            - **Purpose**: Analyze YouTube Trending Videos
+            - **Tech Stack**: Streamlit, YouTube Data API v3, Pandas, Matplotlib
+            - **GitHub Repository**: [link your repo here]
+            - **Contact**: [link your LinkedIn/Email]
+            
+            ---
+            Built with ❤️ using Streamlit
+        """)
 
 if __name__ == "__main__":
     main()
