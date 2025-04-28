@@ -26,18 +26,26 @@ def main():
     st.set_page_config(page_title="YouTube Trending Analysis", page_icon="📈", layout="wide")
     st.title("📈 YouTube Trending Video Analysis")
 
-    # Sidebar with Tabs
+    # Initialize session state variables
+    if "selected_tab" not in st.session_state:
+        st.session_state.selected_tab = "🏠 Home"
+    if "api_key" not in st.session_state:
+        st.session_state.api_key = None
+    if "countries" not in st.session_state:
+        st.session_state.countries = None
+
+    # Sidebar Tabs
     with st.sidebar:
         st.header("Navigation")
-        selected_tab = st.selectbox("Select a section", [
-            "🏠 Home",
-            "🔍 Fetch and Analysis",
-            "📊 Visuals",
-            "ℹ️ About"
-        ])
+        selected_tab = st.selectbox(
+            "Select a section",
+            ["🏠 Home", "🔍 Fetch and Analysis", "📊 Visuals", "ℹ️ About"],
+            index=["🏠 Home", "🔍 Fetch and Analysis", "📊 Visuals", "ℹ️ About"].index(st.session_state.selected_tab)
+        )
+        st.session_state.selected_tab = selected_tab
         st.markdown("---")
 
-    if selected_tab == "🏠 Home":
+    if st.session_state.selected_tab == "🏠 Home":
         st.subheader("Welcome to YouTube Trending Video Analysis App!")
         st.write("""
             🔥 **Features**:
@@ -50,7 +58,7 @@ def main():
             👉 Switch tabs from the sidebar to Fetch and Explore data.
         """)
 
-    elif selected_tab == "🔍 Fetch and Analysis":
+    elif st.session_state.selected_tab == "🔍 Fetch and Analysis":
         st.subheader("Fetch and Preprocess Trending Videos")
 
         api_key = st.text_input("🔑 Enter YouTube API Key", type="password")
@@ -74,63 +82,63 @@ def main():
                     df = prepare_data(csv_file)
                 st.success("✅ Data loaded and preprocessed!")
 
-                st.dataframe(df.head())
+                # Save API Key and countries to session
+                st.session_state.api_key = api_key
+                st.session_state.countries = countries
 
-    elif selected_tab == "📊 Visuals":
+                # Automatically move to Visuals tab
+                st.session_state.selected_tab = "📊 Visuals"
+                st.experimental_rerun()  # Important: This forces rerun immediately
+
+    elif st.session_state.selected_tab == "📊 Visuals":
         st.subheader("📊 Data Visualizations")
 
-        api_key = st.text_input("🔑 Enter YouTube API Key", type="password", key="visuals_api_key")
-        countries = st.multiselect(
-            "🌎 Select countries",
-            options=['US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU'],
-            default=[],
-            key="visuals_countries"
-        )
+        # Use session state values
+        api_key = st.session_state.api_key
+        countries = st.session_state.countries
 
-        if st.button("📥 Load Visuals"):
-            if not countries:
-                st.error("❗ Please select at least one country.")
-            else:
-                try:
-                    df = prepare_data('trending_videos.csv')
+        if not api_key or not countries:
+            st.error("⚠️ Please first Fetch data from 'Fetch and Analysis' tab.")
+        else:
+            try:
+                df = prepare_data('trending_videos.csv')
 
-                    with st.expander("📈 View, Like, Comment Distribution", expanded=False):
-                        plot_distributions(df)
-                        st.pyplot()
+                with st.expander("📈 View, Like, Comment Distribution", expanded=False):
+                    plot_distributions(df)
+                    st.pyplot()
 
-                    with st.expander("📈 Correlation Matrix of Engagement Metrics", expanded=False):
-                        plot_correlation_matrix(df)
-                        st.pyplot()
+                with st.expander("📈 Correlation Matrix of Engagement Metrics", expanded=False):
+                    plot_correlation_matrix(df)
+                    st.pyplot()
 
-                    with st.expander("📈 Boxplot of View Counts", expanded=False):
-                        plot_boxplot_views(df)
-                        st.pyplot()
+                with st.expander("📈 Boxplot of View Counts", expanded=False):
+                    plot_boxplot_views(df)
+                    st.pyplot()
 
-                    with st.expander("📈 Distribution of Trending Videos by Category", expanded=False):
-                        plot_category_distribution(df)
-                        st.pyplot()
+                with st.expander("📈 Distribution of Trending Videos by Category", expanded=False):
+                    plot_category_distribution(df)
+                    st.pyplot()
 
-                    with st.expander("📈 Average Engagement Metrics by Category", expanded=False):
-                        plot_engagement_by_category(df)
-                        st.pyplot()
+                with st.expander("📈 Average Engagement Metrics by Category", expanded=False):
+                    plot_engagement_by_category(df)
+                    st.pyplot()
 
-                    with st.expander("📈 Duration vs View Count", expanded=False):
-                        analyze_duration(df)
-                        st.pyplot()
+                with st.expander("📈 Duration vs View Count", expanded=False):
+                    analyze_duration(df)
+                    st.pyplot()
 
-                    with st.expander("📈 Tags vs View Count", expanded=False):
-                        analyze_tags(df)
-                        st.pyplot()
+                with st.expander("📈 Tags vs View Count", expanded=False):
+                    analyze_tags(df)
+                    st.pyplot()
 
-                    with st.expander("📈 Publish Hour vs View Count", expanded=False):
-                        analyze_publish_hour(df)
-                        st.pyplot()
+                with st.expander("📈 Publish Hour vs View Count", expanded=False):
+                    analyze_publish_hour(df)
+                    st.pyplot()
 
-                except Exception as e:
-                    st.error(f"⚠️ Error loading data: {e}")
-                    st.info("Please fetch and preprocess data first from the 'Fetch and Analysis' tab.")
+            except Exception as e:
+                st.error(f"⚠️ Error loading data: {e}")
 
-    elif selected_tab == "ℹ️ About":
+    elif st.session_state.selected_tab == "ℹ️ About":
         st.subheader("About This App")
         st.write("""
             - **Developer**: Akshay CU 🚀
