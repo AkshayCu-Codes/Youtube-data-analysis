@@ -109,62 +109,69 @@ def home():
     st.title("🏠 Welcome to the Ultimate YouTube Data Analysis Experience 🚀")
 
     st.markdown("""
-    ### 🎬 Lights, Camera, Data!
-    If you're diving into **Data Science** and looking for a real-world dataset that’s dynamic, massive, and full of stories — look no further than **YouTube**. With over **2 billion monthly users**, **500+ hours of content uploaded every minute**, and rich metadata at your fingertips, YouTube is a goldmine for data enthusiasts.
+    ### 🎬 Dive Into YouTube Trends
+    Explore **YouTube's trending videos** dataset to uncover patterns, such as:
+    - 📈 What makes a video go viral?
+    - 🕒 How timing and content types impact performance.
+    - 🧠 Discover correlations between video metrics and engagement.
 
-    This project takes you on a full-stack data journey — from setting up APIs to digging deep into what makes a video *go viral*.
+    ---  
 
-    ---
+    ### 🔍 Project Overview:
+    - Fetch live trending data via **YouTube Data API v3**
+    - Clean and preprocess data
+    - Visualize insights: categories, views, engagement, etc.
 
-    ### 🔍 What’s This Project About?
-    We’re analyzing the **Top 200 Trending YouTube Videos** using Python and the **YouTube Data API v3**. You’ll learn how to:
-    - Collect live trending video data
-    - Clean and wrangle data into usable formats
-    - Explore trends across categories, durations, upload times, and engagement metrics
-    - Visualize insights through compelling charts and graphs
+    --- 
 
-    By the end, you’ll understand:
-    - 📈 What factors correlate with virality
-    - 🕒 How timing and content type affect performance
-    - 🧠 How data-driven storytelling reveals trends you can’t just “watch”
-
-    ---
-
-    ### 💡 Why This Project Stands Out
-    ✅ **Real-World Relevance** – Analyzing live YouTube trends is not just fun, it’s practical.  
-    ✅ **Skill-Building** – Learn APIs, EDA, Pythonic data wrangling, and visualization techniques.  
-    ✅ **Portfolio Power-Up** – Add an eye-catching, interactive project to your GitHub or resume.  
-    ✅ **Expandable** – Ready for ML models, dashboarding, sentiment analysis, or topic clustering!
-
-    ---
-
-    ### 🧠 What You’ll Learn
+    ### 🚀 Skills You’ll Gain:
     | Skill Area           | Tools & Techniques         |
     |----------------------|----------------------------|
-    | API Integration      | YouTube Data API v3, `requests` |
-    | Data Handling        | Pandas, JSON, Python       |
-    | Visualization        | Matplotlib, Seaborn, Plotly |
-    | Insights Discovery   | Statistical Analysis, Correlation |
-    | Storytelling         | Markdown, Visual Narratives |
-
-    ---
+    | API Integration      | YouTube API v3, Python     |
+    | Data Wrangling       | Pandas, Python             |
+    | Visualization        | Matplotlib, Seaborn        |
+    | Data Insights        | Statistical Analysis       |
+    
+    --- 
 
     ### 👨‍💻 Perfect For:
     - Aspiring Data Scientists
     - Portfolio Builders
     - YouTube Analysts & Creators
-    - Curious Learners with Python Skills
 
-    > ✨ *“Turn streams of video into streams of insight.”*  
-    Let's decode the algorithm behind what trends — one dataset at a time.
+    > ✨ "Turn streams of video into streams of insight."  
     """, unsafe_allow_html=True)
 
+
+
+import streamlit as st
 
 def fetch_and_analysis():
     st.title("🔍 Fetch and Analyze Trending Videos")
     
+    # Add a small "i" icon with a tooltip for the API Key instructions
+    with st.expander("Click here for API Key Instructions", expanded=False):
+        st.markdown("""
+        ### How to Get Your YouTube API Key
+        To fetch trending video data, you need to get your **YouTube API Key**. Here's how:
+        
+        1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+        2. Sign in or create a new Google account.
+        3. Create a new project or select an existing one.
+        4. Navigate to **APIs & Services** > **Library**.
+        5. Search for **YouTube Data API v3** and click on it.
+        6. Enable the **YouTube Data API v3** for your project.
+        7. Go to **APIs & Services** > **Credentials**.
+        8. Click **Create Credentials** and choose **API Key**.
+        9. Copy your API key and paste it below.
+        
+        > **Note:** Keep your API key private and don't share it publicly.
+        """, unsafe_allow_html=True)
+    
+    # API Key input
     api_key = st.text_input("Enter your YouTube API Key", type="password")
     
+    # Country selection
     countries = st.multiselect(
         "Select countries to fetch trending videos",
         options=['US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU'],
@@ -191,6 +198,7 @@ def fetch_and_analysis():
 
             st.success("✅ Data fetched, cleaned and ready!")
             st.dataframe(df.head())
+
 
 def visuals():
     st.title("📊 Visualizations")
