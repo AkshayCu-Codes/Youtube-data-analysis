@@ -47,36 +47,37 @@ def sidebar():
                 100% { opacity: 1; }
             }
            button[kind="secondary"] {
-                width: 220px;
-                padding: 0.9rem 1.2rem;
-                margin: 0.5rem 0;
-                border-radius: 20px;  /* Rounded corners for a more modern look */
+                width: 200px;  /* Keep the width same */
+                padding: 0.8rem 1rem;  /* Keep the padding same */
+                margin: 0.4rem 0;
+                border-radius: 12px;  /* Keep rounded corners */
                 color: #333;
                 background-color: #fff;
                 border: 2px solid #ddd;
-                font-size: 17px;  /* Slightly larger font size */
+                font-size: 16px;  /* Keep font size the same */
                 font-weight: 600;
-                text-transform: uppercase;  /* Make text uppercase for better emphasis */
-                letter-spacing: 1px;  /* Add some spacing between letters */
+                text-transform: uppercase;  /* Make text uppercase for emphasis */
+                letter-spacing: 1px;  /* Add spacing between letters */
                 transition: all 0.3s ease-in-out;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* A subtle shadow for a floating effect */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Soft shadow for a floating effect */
                 cursor: pointer;  /* Indicate that the button is clickable */
             }
 
             button[kind="secondary"]:hover {
-                background-color: #ffebeb;  /* Light red background on hover */
+                background-color: #ffebeb;  
                 color: #c40000;
                 border-color: #ff0000;
-                transform: translateY(-3px);  /* Lift the button slightly on hover */
-                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);  /* Add a more pronounced shadow */
+                transform: translateY(-3px);  
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);  
             }
 
             button.selected {
                 background-color: #ff0000 !important;
                 color: white !important;
                 border: 2px solid #ff0000 !important;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* Keep the elevated effect for the selected button */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  
             }
+
 
             </style>
             """,
@@ -105,8 +106,59 @@ def sidebar():
 
 
 def home():
-    st.title("🏠 Home")
-    st.markdown("Welcome to **YouTube Trending Video Analysis**! 🎬 \n\nExplore YouTube's trending videos, analyze patterns, and gain insights!")
+    st.title("🏠 Welcome to the Ultimate YouTube Data Analysis Experience 🚀")
+
+    st.markdown("""
+    ### 🎬 Lights, Camera, Data!
+    If you're diving into **Data Science** and looking for a real-world dataset that’s dynamic, massive, and full of stories — look no further than **YouTube**. With over **2 billion monthly users**, **500+ hours of content uploaded every minute**, and rich metadata at your fingertips, YouTube is a goldmine for data enthusiasts.
+
+    This project takes you on a full-stack data journey — from setting up APIs to digging deep into what makes a video *go viral*.
+
+    ---
+
+    ### 🔍 What’s This Project About?
+    We’re analyzing the **Top 200 Trending YouTube Videos** using Python and the **YouTube Data API v3**. You’ll learn how to:
+    - Collect live trending video data
+    - Clean and wrangle data into usable formats
+    - Explore trends across categories, durations, upload times, and engagement metrics
+    - Visualize insights through compelling charts and graphs
+
+    By the end, you’ll understand:
+    - 📈 What factors correlate with virality
+    - 🕒 How timing and content type affect performance
+    - 🧠 How data-driven storytelling reveals trends you can’t just “watch”
+
+    ---
+
+    ### 💡 Why This Project Stands Out
+    ✅ **Real-World Relevance** – Analyzing live YouTube trends is not just fun, it’s practical.  
+    ✅ **Skill-Building** – Learn APIs, EDA, Pythonic data wrangling, and visualization techniques.  
+    ✅ **Portfolio Power-Up** – Add an eye-catching, interactive project to your GitHub or resume.  
+    ✅ **Expandable** – Ready for ML models, dashboarding, sentiment analysis, or topic clustering!
+
+    ---
+
+    ### 🧠 What You’ll Learn
+    | Skill Area           | Tools & Techniques         |
+    |----------------------|----------------------------|
+    | API Integration      | YouTube Data API v3, `requests` |
+    | Data Handling        | Pandas, JSON, Python       |
+    | Visualization        | Matplotlib, Seaborn, Plotly |
+    | Insights Discovery   | Statistical Analysis, Correlation |
+    | Storytelling         | Markdown, Visual Narratives |
+
+    ---
+
+    ### 👨‍💻 Perfect For:
+    - Aspiring Data Scientists
+    - Portfolio Builders
+    - YouTube Analysts & Creators
+    - Curious Learners with Python Skills
+
+    > ✨ *“Turn streams of video into streams of insight.”*  
+    Let's decode the algorithm behind what trends — one dataset at a time.
+    """, unsafe_allow_html=True)
+
 
 def fetch_and_analysis():
     st.title("🔍 Fetch and Analyze Trending Videos")
