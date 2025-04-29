@@ -16,12 +16,15 @@ if "data_loaded" not in st.session_state:
 
 def sidebar():
     with st.sidebar:
-        # Sidebar styling and fonts
+        # Sidebar styling
         st.markdown(
             """
             <style>
             [data-testid="stSidebar"] {
                 background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 50%, #f0f0f0 100%);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             .sidebar-title {
                 text-align: center;
@@ -30,76 +33,75 @@ def sidebar():
                 font-weight: bold;
                 margin-bottom: 0.5rem;
             }
-            .nav-button {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 100%;
-                text-align: center;
-                padding: 0.8rem 0;
-                margin: 0.3rem 0;
-                border-radius: 10px;
-                color: #333333;
-                background-color: #ffffff;
-                border: 1px solid #ddd;
-                font-size: 16px;
-                font-weight: 600;
-                transition: all 0.3s ease;
-                box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-            }
-            .nav-button:hover {
-                background-color: #ffeaea;
-                color: #c40000;
-                border-color: #ff0000;
-                transform: scale(1.02);
-            }
-            .active-tab {
-                background-color: #ff0000 !important;
-                color: white !important;
-                border: 1px solid #ff0000 !important;
-            }
             .trending-animation {
                 text-align: center;
                 font-size: 18px;
-                margin-top: 0.5rem;
+                margin-bottom: 1rem;
                 animation: pulse 1.5s infinite;
+                font-weight: 600;
+                color: #FF0000;
             }
             @keyframes pulse {
                 0% { opacity: 1; }
                 50% { opacity: 0.5; }
                 100% { opacity: 1; }
             }
+           button[kind="secondary"] {
+                width: 220px;
+                padding: 0.9rem 1.2rem;
+                margin: 0.5rem 0;
+                border-radius: 20px;  /* Rounded corners for a more modern look */
+                color: #333;
+                background-color: #fff;
+                border: 2px solid #ddd;
+                font-size: 17px;  /* Slightly larger font size */
+                font-weight: 600;
+                text-transform: uppercase;  /* Make text uppercase for better emphasis */
+                letter-spacing: 1px;  /* Add some spacing between letters */
+                transition: all 0.3s ease-in-out;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* A subtle shadow for a floating effect */
+                cursor: pointer;  /* Indicate that the button is clickable */
+            }
+
+            button[kind="secondary"]:hover {
+                background-color: #ffebeb;  /* Light red background on hover */
+                color: #c40000;
+                border-color: #ff0000;
+                transform: translateY(-3px);  /* Lift the button slightly on hover */
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);  /* Add a more pronounced shadow */
+            }
+
+            button.selected {
+                background-color: #ff0000 !important;
+                color: white !important;
+                border: 2px solid #ff0000 !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* Keep the elevated effect for the selected button */
+            }
+
             </style>
             """,
             unsafe_allow_html=True
         )
 
-        # YouTube logo centered
+        # Logo & animation
         st.image("https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg", width=200)
         st.markdown('<div class="sidebar-title">Trending Analysis</div>', unsafe_allow_html=True)
         st.markdown('<div class="trending-animation">🔥 YouTube Trending 🔥</div>', unsafe_allow_html=True)
         st.markdown("---")
 
-        # Initialize session state
+        # Session state
         if "selected_tab" not in st.session_state:
             st.session_state.selected_tab = "🏠 Home"
 
-        # Navigation buttons
-        if st.button("🏠 Home", key="home_btn"):
+        # Buttons (styled using CSS above)
+        if st.button("🏠 Home"):
             st.session_state.selected_tab = "🏠 Home"
-        if st.button("🔍 Fetch and Analysis", key="fetch_btn"):
+        if st.button("🔍 Fetch and Analysis"):
             st.session_state.selected_tab = "🔍 Fetch and Analysis"
-        if st.button("📊 Visuals", key="visuals_btn"):
+        if st.button("📊 Visuals"):
             st.session_state.selected_tab = "📊 Visuals"
-        if st.button("ℹ️ About", key="about_btn"):
+        if st.button("ℹ️ About"):
             st.session_state.selected_tab = "ℹ️ About"
-
-        st.markdown("---")
-        st.subheader("📚 About")
-        st.caption("🔴 Explore YouTube's Trending Videos and understand viral patterns!")
-        st.caption("Developed by Akshay CU 🚀")
-        st.markdown("---")
-        st.caption("Made with ❤️ using Streamlit.")
 
 
 def home():
