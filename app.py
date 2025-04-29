@@ -16,24 +16,67 @@ if "data_loaded" not in st.session_state:
 
 def sidebar():
     with st.sidebar:
-        # YouTube Logo and Title
-        st.image("https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg", width=180)
-        st.markdown("<h2 style='text-align: center; color: red;'>Trending Analysis</h2>", unsafe_allow_html=True)
-        
-        st.markdown("---")
-        st.subheader("📍 Navigation")
-        selected_tab = st.selectbox(
-            "Choose a section",
-            ["🏠 Home", "🔍 Fetch and Analysis", "📊 Visuals", "ℹ️ About"],
-            index=["🏠 Home", "🔍 Fetch and Analysis", "📊 Visuals", "ℹ️ About"].index(st.session_state.selected_tab)
+        # Background styling
+        st.markdown(
+            """
+            <style>
+            [data-testid="stSidebar"] {
+                background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 50%, #f0f0f0 100%);
+            }
+            .sidebar-title {
+                text-align: center;
+                font-size: 28px;
+                color: #FF0000;
+                font-weight: bold;
+            }
+            .nav-button {
+                display: block;
+                width: 100%;
+                text-align: left;
+                padding: 0.75rem 1rem;
+                margin: 0.3rem 0;
+                border-radius: 8px;
+                color: black;
+                background-color: #ffffff;
+                border: 1px solid #ddd;
+                font-size: 16px;
+                font-weight: 500;
+                transition: background-color 0.3s ease;
+            }
+            .nav-button:hover {
+                background-color: #ffeaea;
+                color: #c40000;
+                border-color: #ff0000;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
         )
-        st.session_state.selected_tab = selected_tab
+
+        # YouTube logo centered
+        st.image("https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg", width=200)
+
+        st.markdown('<div class="sidebar-title">Trending Analysis</div>', unsafe_allow_html=True)
+        st.markdown("---")
+
+        # Navigation buttons
+        if st.button("🏠 Home", key="home_btn"):
+            st.session_state.selected_tab = "🏠 Home"
+        if st.button("🔍 Fetch and Analysis", key="fetch_btn"):
+            st.session_state.selected_tab = "🔍 Fetch and Analysis"
+        if st.button("📊 Visuals", key="visuals_btn"):
+            st.session_state.selected_tab = "📊 Visuals"
+        if st.button("ℹ️ About", key="about_btn"):
+            st.session_state.selected_tab = "ℹ️ About"
 
         st.markdown("---")
         st.subheader("📚 About")
-        st.info("Developed by Akshay CU 🚀 \n\nAnalyzing YouTube's most viral videos.")
+        st.caption("🔴 Explore YouTube's Trending Videos and understand viral patterns!")
+        st.caption("Developed by Akshay CU 🚀")
+
         st.markdown("---")
-        st.caption("Made with ❤️ using Streamlit")
+        st.caption("Made with ❤️ using Streamlit.")
+
 
 def home():
     st.title("🏠 Home")
