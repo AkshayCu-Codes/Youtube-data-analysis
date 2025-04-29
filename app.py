@@ -47,16 +47,16 @@ def sidebar():
                 100% { opacity: 1; }
             }
            button[kind="secondary"] {
-                width: 200px;  /* Keep the width same */
+                width: 300px;  /* Keep the width same */
                 padding: 0.8rem 1rem;  /* Keep the padding same */
                 margin: 0.4rem 0;
                 border-radius: 12px;  /* Keep rounded corners */
                 color: #333;
                 background-color: #fff;
-                border: 2px solid #ddd;
-                font-size: 16px;  /* Keep font size the same */
+                border: 3px solid #ddd;
+                font-size: 16px;  
                 font-weight: 600;
-                text-transform: uppercase;  /* Make text uppercase for emphasis */
+                text-transform: uppercase;  
                 letter-spacing: 1px;  /* Add spacing between letters */
                 transition: all 0.3s ease-in-out;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Soft shadow for a floating effect */
@@ -86,8 +86,8 @@ def sidebar():
 
         # Logo & animation
         st.image("https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg", width=200)
-        st.markdown('<div class="sidebar-title">Trending Analysis</div>', unsafe_allow_html=True)
-        st.markdown('<div class="trending-animation">🔥 YouTube Trending 🔥</div>', unsafe_allow_html=True)
+        # st.markdown('<div class="sidebar-title">Trending Analysis</div>', unsafe_allow_html=True)
+        # st.markdown('<div class="trending-animation">🔥 YouTube Trending 🔥</div>', unsafe_allow_html=True)
         st.markdown("---")
 
         # Session state
