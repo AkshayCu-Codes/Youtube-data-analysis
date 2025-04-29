@@ -16,7 +16,7 @@ if "data_loaded" not in st.session_state:
 
 def sidebar():
     with st.sidebar:
-        # Background styling
+        # Sidebar styling and fonts
         st.markdown(
             """
             <style>
@@ -28,25 +28,46 @@ def sidebar():
                 font-size: 28px;
                 color: #FF0000;
                 font-weight: bold;
+                margin-bottom: 0.5rem;
             }
             .nav-button {
-                display: block;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 width: 100%;
-                text-align: left;
-                padding: 0.75rem 1rem;
+                text-align: center;
+                padding: 0.8rem 0;
                 margin: 0.3rem 0;
-                border-radius: 8px;
-                color: black;
+                border-radius: 10px;
+                color: #333333;
                 background-color: #ffffff;
                 border: 1px solid #ddd;
                 font-size: 16px;
-                font-weight: 500;
-                transition: background-color 0.3s ease;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
             }
             .nav-button:hover {
                 background-color: #ffeaea;
                 color: #c40000;
                 border-color: #ff0000;
+                transform: scale(1.02);
+            }
+            .active-tab {
+                background-color: #ff0000 !important;
+                color: white !important;
+                border: 1px solid #ff0000 !important;
+            }
+            .trending-animation {
+                text-align: center;
+                font-size: 18px;
+                margin-top: 0.5rem;
+                animation: pulse 1.5s infinite;
+            }
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
             }
             </style>
             """,
@@ -55,9 +76,13 @@ def sidebar():
 
         # YouTube logo centered
         st.image("https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg", width=200)
-
         st.markdown('<div class="sidebar-title">Trending Analysis</div>', unsafe_allow_html=True)
+        st.markdown('<div class="trending-animation">🔥 YouTube Trending 🔥</div>', unsafe_allow_html=True)
         st.markdown("---")
+
+        # Initialize session state
+        if "selected_tab" not in st.session_state:
+            st.session_state.selected_tab = "🏠 Home"
 
         # Navigation buttons
         if st.button("🏠 Home", key="home_btn"):
@@ -73,7 +98,6 @@ def sidebar():
         st.subheader("📚 About")
         st.caption("🔴 Explore YouTube's Trending Videos and understand viral patterns!")
         st.caption("Developed by Akshay CU 🚀")
-
         st.markdown("---")
         st.caption("Made with ❤️ using Streamlit.")
 
