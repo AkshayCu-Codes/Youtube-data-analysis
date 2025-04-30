@@ -144,37 +144,29 @@ def home():
 
 
 
-import streamlit as st
+
 
 def fetch_and_analysis():
     st.title("🔍 Fetch and Analyze Trending Videos")
-    
-    # Add a small "i" icon with a tooltip for the API Key instructions
-    with st.expander("Click here for API Key Instructions", expanded=False):
-        st.markdown("""
-        ### How to Get Your YouTube API Key
-        To fetch trending video data, you need to get your **YouTube API Key**. Here's how:
-        
-        1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
-        2. Sign in or create a new Google account.
-        3. Create a new project or select an existing one.
-        4. Navigate to **APIs & Services** > **Library**.
-        5. Search for **YouTube Data API v3** and click on it.
-        6. Enable the **YouTube Data API v3** for your project.
-        7. Go to **APIs & Services** > **Credentials**.
-        8. Click **Create Credentials** and choose **API Key**.
-        9. Copy your API key and paste it below.
-        
-        > **Note:** Keep your API key private and don't share it publicly.
-        """, unsafe_allow_html=True)
-    
-    # API Key input
-    api_key = st.text_input("Enter your YouTube API Key", type="password")
-    
-    # Country selection
+
+    # Info icon for API Key guidance
+    # with st.expander("❓ How to get your YouTube API Key", expanded=False):
+    #     st.markdown("""
+    #     1. Go to [Google Cloud Console](https://console.cloud.google.com/).
+    #     2. Create or select a project.
+    #     3. Enable **YouTube Data API v3** in the API Library.
+    #     4. Go to **Credentials** and click **Create Credentials → API key**.
+    #     5. Copy the key and paste it below.
+    #     """)
+
+    api_key = st.text_input("Enter your YouTube API Key", type="password", 
+                            help="ℹ️ You can get an API Key from https://console.cloud.google.com/apis/credentials")
+
+    country_options = ['All Countries', 'US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU']
     countries = st.multiselect(
         "Select countries to fetch trending videos",
-        options=['US', 'IN', 'GB', 'CA', 'DE', 'FR', 'JP', 'KR', 'BR', 'AU'],
+        options=country_options,
+        default=None,
         help="Select one or more countries"
     )
 
@@ -184,20 +176,38 @@ def fetch_and_analysis():
         elif not countries:
             st.error("❗ Please select at least one country.")
         else:
+            selected_countries = country_options[1:] if "All Countries" in countries else countries
+
             with st.spinner("Fetching trending videos 🎥... Please wait..."):
                 category_mapping = get_category_mapping(api_key)
-                trending_videos = get_trending_videos(api_key, category_mapping, countries)
+                trending_videos = get_trending_videos(api_key, category_mapping, selected_countries)
                 save_to_csv(trending_videos, 'trending_videos.csv')
 
                 df = load_data('trending_videos.csv')
                 check_missing_and_dtypes(df)
                 df = preprocess_data(df)
-                
+
                 st.session_state.df = df
                 st.session_state.data_loaded = True
 
-            st.success("✅ Data fetched, cleaned and ready!")
-            st.dataframe(df.head())
+            st.success("✅ Data fetched, cleaned, and ready!")
+
+            # Show full dataframe for multiple or all countries
+            if "All Countries" in countries or len(countries) > 1:
+                st.dataframe(df)
+            else:
+                st.dataframe(df.head())
+
+            # CSV download
+            csv = df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Download as CSV",
+                data=csv,
+                file_name='trending_videos.csv',
+                mime='text/csv'
+            )
+
+
 
 
 def visuals():
